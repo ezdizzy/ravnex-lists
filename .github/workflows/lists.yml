@@ -1,0 +1,35 @@
+name: lists
+
+on:
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Ignore the shrink-guard (admin use)"
+        default: "false"
+  schedule:
+    - cron: "17 */6 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build lists
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          python3 scripts/build_lists.py --out dist
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG=$(date -u +%Y%m%d%H%M)
+          NOTES=$(python3 -c "import json; m=json.load(open('dist/manifest.json',encoding='utf-8')); ok=sum(1 for v in m['categories'].values() if v.get('status')=='ok'); om=[k for k,v in m['categories'].items() if v.get('status')=='omitted']; print('Automated lists build (precision-first).'); print('Categories: %d ok%s. Provenance and sha256 per category: manifest.json.' % (ok, (', omitted: '+', '.join(om)) if om else '')); print('Upstream data belongs to its authors - see the attribution table in manifest.json and README.md.')")
+          gh release create "$TAG" dist/* --title "lists $TAG" --notes "$NOTES" --latest

@@ -1,0 +1,11 @@
+SPDX-License-Identifier: GPL-2.0-only
+
+The BUILD CODE of this repository (scripts/, workflow) is licensed under
+GPL-2.0-only, same as the ravnex app (https://github.com/ezdizzy/ravnex).
+
+The published DATA files (cat-*.srs, cat-*.json, strategies/*) are NOT the
+product of this repository: they are aggregated and validated copies of
+upstream data. Every published file carries its exact origin, license and
+attribution line in manifest.json. Data published under no license by its
+authors is republished with explicit attribution; if you are an upstream
+author and want different handling, open an issue — it will be honored.
