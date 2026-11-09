@@ -318,12 +318,16 @@ def build(out_dir, force, repo_self, token):
         "excluded": spec.get("excluded", []),
     }
 
-    # prefetch upstream release tags per repo (cheap, cached)
+    # prefetch upstream release tags per repo (release-kind sources only —
+    # site/raw "repos" are not GitHub repositories and would just 404)
     repos = set()
     for cat in spec["categories"]:
-        repos.add(cat["origin"]["repo"])
+        o = cat["origin"]
+        if o.get("kind") in ("release", "release-zip"):
+            repos.add(o["repo"])
         for r in cat.get("reserves", []):
-            repos.add(r["repo"])
+            if r.get("kind") in ("release", "release-zip"):
+                repos.add(r["repo"])
 
     prev = previous_counts(repo_self, token)
     zc = ZipCache()
