@@ -200,12 +200,7 @@
 		{"id": "win-spy", "file": "cat-win-spy.srs", "format": "srs", "layer": "precise",
 			"origin": {"repo": "runetfreedom/russia-v2ray-rules-dat", "kind": "release-zip", "asset": "sing-box.zip", "member": "rule-set-geosite/geosite-win-spy.srs", "license": "GPL-3.0",
 				"attribution": "runetfreedom/russia-v2ray-rules-dat — GPL-3.0."}},
-		{"id": "antifilter-domains", "file": "cat-antifilter-domains.json", "format": "source-json", "layer": "precise",
-			"origin": {"repo": "antifilter.download", "kind": "site", "url": "https://antifilter.download/list/domains.lst", "license": "none",
-				"attribution": "antifilter.download — no license; data republished with attribution."},
-			"reserves": [{"repo": "antifilter.community", "kind": "site", "url": "https://antifilter.community/list/domains.lst", "license": "none"}],
-			"validate": {"min_entries": 100}},
-		{"id": "antifilter-ip", "file": "cat-antifilter-ip.json", "format": "source-json", "layer": "precise",
+	{"id": "antifilter-ip", "file": "cat-antifilter-ip.json", "format": "source-json", "layer": "precise",
 			"origin": {"repo": "antifilter.download", "kind": "site", "url": "https://antifilter.download/list/ipsum.lst", "license": "none",
 				"attribution": "antifilter.download — no license; data republished with attribution."},
 			"reserves": [{"repo": "antifilter.download", "kind": "site", "url": "https://antifilter.download/list/subnet.lst", "license": "none"}],
@@ -235,6 +230,7 @@
 	],
 	"excluded": [
 		{"id": "antifilter-download (11.5 MB mega list)", "why": "mega-aggregate, against the precision-first policy"},
+		{"id": "antifilter.download domains.lst (~39 MB as JSON, 700k+ domains)", "why": "mega-aggregate discovered by the entry-size guard after the first build; the app still offers it as an explicit opt-in fetched straight from the source"},
 		{"id": "RussiaFancyLists full.lst (33 MB)", "why": "mega-aggregate, against the precision-first policy"},
 		{"id": "runetfreedom geosite.dat / geoip.dat (84/17 MB)", "why": "monolithic trees, wrong granularity for routers"}
 	]

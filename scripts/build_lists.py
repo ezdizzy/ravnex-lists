@@ -385,6 +385,19 @@ def build(out_dir, force, repo_self, token):
         }
         print("OK   %-24s %8s B  reserve=%s" % (cid, meta.get("bytes"), meta.get("from_reserve")))
 
+        # size guard: a 'precise' category must stay small — a fat list is
+        # omitted honestly instead of sneaking a mega-aggregate into the
+        # default delivery (generalized form of the "source went bad" class).
+        limit = 2 * 1024 * 1024
+        if cat["layer"] == "precise" and isinstance(meta.get("bytes"), int) and meta["bytes"] > limit:
+            manifest["categories"][cid] = {
+                "status": "omitted",
+                "errors": ["size guard: precise category too big (%d bytes); demote it to mass or trim it" % meta["bytes"]],
+                "layer": cat["layer"],
+            }
+            os.remove(dest)
+            print("OMIT %s (size guard: %d bytes)" % (cid, meta["bytes"]))
+
     # strategies (small JSON, validated passthrough with attribution)
     for st in spec.get("strategies", []):
         src = st["origin"]
